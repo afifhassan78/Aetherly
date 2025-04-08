@@ -1,4 +1,6 @@
 CO2Meter - Carbon Footprint Dashboard (Prototype)
+
+
 Hey there! 👋 This is a simple dashboard I built to explore how we might track digital carbon footprints. Right now it's just the visual interface - think of it like a "mockup" that shows what the final product could look like.
 
 What Works Right Now
