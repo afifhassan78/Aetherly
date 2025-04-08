@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Co2Meter- Carbon Footprint Monitor</title>
+    <style>
+        /* Basic Color Scheme */
+        :root {
+            --dark-green: #1a2e2a;
+            --medium-green: #2d4a44;
+            --light-green: #588157;
+            --highlight: #84a98c;
+            --text-color: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--dark-green);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--medium-green);
+            padding: 20px;
+            border-radius: 0 0 15px 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: var(--highlight);
+        }
+        
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            background-color: var(--medium-green);
+            border-radius: 15px;
+            padding: 20px;
+            float: left;
+            margin-right: 30px;
+        }
+        
+        .nav-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(88, 129, 87, 0.5);
+        }
+        
+        .nav-item.active {
+            background-color: var(--light-green);
+            font-weight: bold;
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            overflow: hidden;
+        }
+        
+        .dashboard-section {
+            background-color: var(--medium-green);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--highlight);
+            border-bottom: 2px solid var(--light-green);
+            padding-bottom: 8px;
+        }
+        
+        /* Simple Toggle Switch */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin: 0 10px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #2b463e;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--light-green);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* Basic Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background-color: rgba(13, 32, 27, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: var(--highlight);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* Placeholder for future charts */
+        .chart-placeholder {
+            background-color: rgba(13, 32, 27, 0.5);
+            height: 250px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            border: 2px dashed var(--light-green);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                float: none;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Co2Meter</h1>
+            <p class="tagline">Measure your clicks,Save the Planet</p>
+        </header>
+        
+        <div class="sidebar">
+            <div class="nav-item active">
+                <i class="icon">📊</i> Dashboard
+            </div>
+            <div class="nav-item">
+                <i class="icon">📈</i> Statistics
+            </div>
+            <div class="nav-item">
+                <i class="icon">🌱</i> Carbon Analysis
+            </div>
+            <div class="nav-item">
+                <i class="icon">💡</i> Recommendations
+            </div>
+            <div class="nav-item">
+                <i class="icon">⚙️</i> Settings
+            </div>
+            
+            <div class="toggle-container">
+                <span>Eco Mode</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="dashboard-section">
+                <h2 class="section-title">Your Carbon Footprint</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">42.5 kg</div>
+                        <div class="stat-label">This Month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">-12%</div>
+                        <div class="stat-label">Change from last month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">3.2</div>
+                        <div class="stat-label">Tons saved this year</div>
+                    </div>
+                </div>
+                
+                <div class="chart-placeholder">
+                    [Carbon footprint chart]
+                </div>
+            </div>
+            
+            <div class="dashboard-section">
+                <h2 class="section-title">Activity Breakdown</h2>
+                <div class="chart-placeholder">
+                    [Activity breakdown visualization]
+                </div>
+            </div>
+            
+            <div class="dashboard-section">
+                <h2 class="section-title">Quick Actions</h2>
+                <p>ways you can reduce your footprint today:</p>
+                <ul>
+                    <li>Switch to dark mode</li>
+                    <li>Unsubscribe from unused emails</li>
+                    <li>Luse cloude storage</li>
+                    <li>Limit video streaming</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
