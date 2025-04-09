@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Co2Meter- Carbon Footprint Monitor</title>
+    <title>CarbonTrack - Digital Emissions Monitor</title>
     <style>
         :root {
             --dark-green: #1a2e2a;
@@ -12,7 +12,6 @@
             --highlight: #84a98c;
             --text-color: #f8f9fa;
         }
-        
         body {
             font-family: 'Open Sans', sans-serif;
             background-color: var(--dark-green);
@@ -21,13 +20,11 @@
             padding: 0;
             line-height: 1.6;
         }
-        
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
-        
         header {
             background-color: var(--medium-green);
             padding: 20px;
@@ -35,18 +32,18 @@
             text-align: center;
             margin-bottom: 30px;
         }
-        
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-            color: var(--highlight);
+        .app-title {
+            font-size: 2.4rem;
+            background: linear-gradient(90deg, var(--highlight), var(--light-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 5px;
         }
-        
         .tagline {
             font-size: 1.1rem;
             opacity: 0.9;
         }
-        
         .sidebar {
             width: 250px;
             background-color: var(--medium-green);
@@ -55,7 +52,6 @@
             float: left;
             margin-right: 30px;
         }
-        
         .nav-item {
             padding: 12px 15px;
             margin-bottom: 8px;
@@ -63,41 +59,37 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        
         .nav-item:hover {
             background-color: rgba(88, 129, 87, 0.5);
         }
-        
         .nav-item.active {
             background-color: var(--light-green);
             font-weight: bold;
         }
-        
         .main-content {
             overflow: hidden;
         }
-        
         .dashboard-section {
             background-color: var(--medium-green);
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
         }
-        
         .section-title {
             font-size: 1.5rem;
             margin-bottom: 15px;
             color: var(--highlight);
             border-bottom: 2px solid var(--light-green);
             padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        
         .toggle-container {
             display: flex;
             align-items: center;
             margin: 15px 0;
         }
-        
         .toggle-switch {
             position: relative;
             display: inline-block;
@@ -105,13 +97,11 @@
             height: 24px;
             margin: 0 10px;
         }
-        
         .toggle-switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
-        
         .slider {
             position: absolute;
             cursor: pointer;
@@ -123,7 +113,6 @@
             transition: .4s;
             border-radius: 24px;
         }
-        
         .slider:before {
             position: absolute;
             content: "";
@@ -135,41 +124,77 @@
             transition: .4s;
             border-radius: 50%;
         }
-        
         input:checked + .slider {
             background-color: var(--light-green);
         }
-        
         input:checked + .slider:before {
             transform: translateX(26px);
         }
-        
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .time-filter {
+            display: flex;
+            background: rgba(13, 32, 27, 0.7);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .time-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .time-btn.active {
+            background: var(--light-green);
+        }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
             margin-bottom: 20px;
         }
-        
         .stat-card {
             background-color: rgba(13, 32, 27, 0.7);
             border-radius: 10px;
             padding: 15px;
             text-align: center;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
-        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .stat-card::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--light-green);
+        }
         .stat-value {
             font-size: 2rem;
             font-weight: bold;
             margin: 10px 0;
             color: var(--highlight);
         }
-        
+        .stat-unit {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
         .stat-label {
             font-size: 0.9rem;
             opacity: 0.8;
         }
-        
         .chart-placeholder {
             background-color: rgba(13, 32, 27, 0.5);
             height: 250px;
@@ -180,7 +205,79 @@
             margin: 20px 0;
             border: 2px dashed var(--light-green);
         }
-        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 180px;
+            background-color: var(--light-green);
+            color: var(--text-color);
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .recommendation-card {
+            background: rgba(13, 32, 27, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid var(--light-green);
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .recommendation-card:hover {
+            background: rgba(88, 129, 87, 0.3);
+        }
+        .recommendation-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            color: var(--highlight);
+        }
+        .recommendation-content {
+            flex: 1;
+        }
+        .recommendation-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .action-btn {
+            background: var(--light-green);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .action-btn:hover {
+            background: var(--highlight);
+            transform: scale(1.05);
+        }
+        .eco-tip {
+            background-color: rgba(88,129,87,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid var(--light-green);
+        }
+        .eco-tip span {
+            font-weight: bold;
+            color: var(--highlight);
+        }
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
@@ -188,9 +285,15 @@
                 margin-right: 0;
                 margin-bottom: 20px;
             }
-            
             .stats-grid {
                 grid-template-columns: 1fr;
+            }
+            .stats-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .time-filter {
+                margin-top: 10px;
             }
         }
     </style>
@@ -198,8 +301,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>Co2Meter</h1>
-            <p class="tagline">Measure your clicks,Save the Planet</p>
+            <h1 class="app-title">CarbonTrack</h1>
+            <p class="tagline">Monitor & Reduce Your Digital Emissions</p>
         </header>
         
         <div class="sidebar">
@@ -207,10 +310,10 @@
                 <i class="icon">📊</i> Dashboard
             </div>
             <div class="nav-item">
-                <i class="icon">📈</i> Statistics
+                <i class="icon">📈</i> Analytics
             </div>
             <div class="nav-item">
-                <i class="icon">🌱</i> Carbon Analysis
+                <i class="icon">🌱</i> Impact
             </div>
             <div class="nav-item">
                 <i class="icon">💡</i> Recommendations
@@ -220,7 +323,7 @@
             </div>
             
             <div class="toggle-container">
-                <span>Eco Mode</span>
+                <span>Dark Mode</span>
                 <label class="toggle-switch">
                     <input type="checkbox" checked>
                     <span class="slider"></span>
@@ -230,46 +333,125 @@
         
         <div class="main-content">
             <div class="dashboard-section">
-                <h2 class="section-title">Your Carbon Footprint</h2>
+                <div class="stats-header">
+                    <h2 class="section-title">
+                        <span>📊</span> Your Digital Carbon Dashboard
+                    </h2>
+                    <div class="time-filter">
+                        <button class="time-btn" data-period="week">Week</button>
+                        <button class="time-btn active" data-period="month">Month</button>
+                        <button class="time-btn" data-period="year">Year</button>
+                    </div>
+                </div>
                 
                 <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value">42.5 kg</div>
-                        <div class="stat-label">This Month</div>
+                    <div class="stat-card tooltip">
+                        <div class="stat-value">32.7 <span class="stat-unit">kgCO₂e</span></div>
+                        <div class="stat-label">Total Footprint</div>
+                        <span class="tooltiptext">Emissions from all digital activities</span>
                     </div>
-                    <div class="stat-card">
+                    <div class="stat-card tooltip">
+                        <div class="stat-value">15.2 <span class="stat-unit">kgCO₂e</span></div>
+                        <div class="stat-label">Streaming</div>
+                        <span class="tooltiptext">Video streaming emissions</span>
+                    </div>
+                    <div class="stat-card tooltip">
                         <div class="stat-value">-12%</div>
-                        <div class="stat-label">Change from last month</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">3.2</div>
-                        <div class="stat-label">Tons saved this year</div>
+                        <div class="stat-label">Improvement</div>
+                        <span class="tooltiptext">Reduction vs last month</span>
                     </div>
                 </div>
                 
-                <div class="chart-placeholder">
-                    [Carbon footprint chart]
+                <div class="eco-tip">
+                    <span>💡 Pro Tip:</span> Enable "Data Saver" mode to reduce emissions by 30%.
                 </div>
+                
+                <div class="chart-placeholder"></div>
             </div>
             
             <div class="dashboard-section">
-                <h2 class="section-title">Activity Breakdown</h2>
-                <div class="chart-placeholder">
-                    [Activity breakdown visualization]
-                </div>
+                <h2 class="section-title">
+                    <span>📈</span> Activity Analysis
+                </h2>
+                <div class="chart-placeholder"></div>
             </div>
             
             <div class="dashboard-section">
-                <h2 class="section-title">Quick Actions</h2>
-                <p>ways you can reduce your footprint today:</p>
-                <ul>
-                    <li>Switch to dark mode</li>
-                    <li>Unsubscribe from unused emails</li>
-                    <li>Luse cloude storage</li>
-                    <li>Limit video streaming</li>
-                </ul>
+                <h2 class="section-title">
+                    <span>💡</span> Quick Actions
+                </h2>
+                
+                <div class="recommendation-card">
+                    <div class="recommendation-icon">🎬</div>
+                    <div class="recommendation-content">
+                        <div class="recommendation-title">Reduce Streaming Quality</div>
+                        <div>Switch from HD to SD when watching videos</div>
+                    </div>
+                    <button class="action-btn">Apply</button>
+                </div>
+                
+                <div class="recommendation-card">
+                    <div class="recommendation-icon">📧</div>
+                    <div class="recommendation-content">
+                        <div class="recommendation-title">Clean Inbox</div>
+                        <div>Delete old emails to reduce storage impact</div>
+                    </div>
+                    <button class="action-btn">Start</button>
+                </div>
+                
+                <div class="recommendation-card">
+                    <div class="recommendation-icon">☁️</div>
+                    <div class="recommendation-content">
+                        <div class="recommendation-title">Optimize Cloud</div>
+                        <div>Remove duplicate files from cloud storage</div>
+                    </div>
+                    <button class="action-btn">Review</button>
+                </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const originalText = btn.textContent;
+                btn.textContent = 'Applying...';
+                btn.disabled = true;
+                
+                setTimeout(() => {
+                    btn.textContent = '✓ Done';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                    }, 2000);
+                }, 1000);
+            });
+        });
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelector('.nav-item.active').classList.remove('active');
+                this.classList.add('active');
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedPeriod = localStorage.getItem('timePeriod') || 'month';
+            document.querySelector(`.time-btn[data-period="${savedPeriod}"]`).classList.add('active');
+            
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    localStorage.setItem('timePeriod', this.dataset.period);
+                });
+            });
+        });
+
+        const modeToggle = document.querySelector('.toggle-switch input');
+        modeToggle.addEventListener('change', function() {
+            document.body.classList.toggle('light-mode', this.checked);
+        });
+    </script>
 </body>
 </html>
