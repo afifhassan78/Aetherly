@@ -3,297 +3,318 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CarbonTrack - Digital Emissions Monitor</title>
+    <title>CarbonTrack Pro - Advanced Emissions Monitor</title>
     <style>
         :root {
             --dark-green: #1a2e2a;
             --medium-green: #2d4a44;
             --light-green: #588157;
             --highlight: #84a98c;
+            --gold: #ffd700;
             --text-color: #f8f9fa;
+            --warning: #ff9f1c;
         }
+
         body {
-            font-family: 'Open Sans', sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background-color: var(--dark-green);
             color: var(--text-color);
             margin: 0;
-            padding: 0;
             line-height: 1.6;
         }
+
         .container {
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 20px auto;
             padding: 20px;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
         }
+
         header {
-            background-color: var(--medium-green);
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--medium-green), var(--dark-green));
             padding: 20px;
-            border-radius: 0 0 15px 15px;
-            text-align: center;
-            margin-bottom: 30px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+
         .app-title {
-            font-size: 2.4rem;
+            font-size: 2rem;
             background: linear-gradient(90deg, var(--highlight), var(--light-green));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin-bottom: 5px;
+            margin: 0;
         }
-        .tagline {
-            font-size: 1.1rem;
-            opacity: 0.9;
+
+        .streak-container {
+            background-color: rgba(255, 165, 0, 0.1);
+            border: 1px solid var(--warning);
+            color: var(--warning);
+            padding: 10px 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
         }
+
+        .streak-icon {
+            font-size: 1.2rem;
+        }
+
+        .streak-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .streak-count {
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+
+        .streak-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
         .sidebar {
-            width: 250px;
-            background-color: var(--medium-green);
-            border-radius: 15px;
-            padding: 20px;
-            float: left;
-            margin-right: 30px;
+            position: sticky;
+            top: 20px;
+            height: min-content;
         }
+
         .nav-item {
             padding: 12px 15px;
             margin-bottom: 8px;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
+
         .nav-item:hover {
-            background-color: rgba(88, 129, 87, 0.5);
+            background-color: rgba(88, 129, 87, 0.3);
         }
+
         .nav-item.active {
             background-color: var(--light-green);
-            font-weight: bold;
+            font-weight: 600;
         }
-        .main-content {
+
+        .badges-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .badge {
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
             overflow: hidden;
         }
+
+        .badge.locked {
+            filter: grayscale(1);
+            opacity: 0.7;
+        }
+
+        .badge.unlocked {
+            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.05));
+            border: 1px solid var(--gold);
+        }
+
+        .badge-icon {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .badge-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .badge-progress {
+            height: 4px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--light-green), var(--highlight));
+            width: 0%;
+        }
+
+        .badge-level {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: var(--gold);
+            color: var(--dark-green);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
         .dashboard-section {
             background-color: var(--medium-green);
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
         }
-        .section-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: var(--highlight);
-            border-bottom: 2px solid var(--light-green);
-            padding-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-        }
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-            margin: 0 10px;
-        }
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #2b463e;
-            transition: .4s;
-            border-radius: 24px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background-color: var(--light-green);
-        }
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-        .stats-header {
+
+        .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-        }
-        .time-filter {
-            display: flex;
-            background: rgba(13, 32, 27, 0.7);
-            border-radius: 20px;
-            overflow: hidden;
-        }
-        .time-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-color);
-            padding: 6px 12px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .time-btn.active {
-            background: var(--light-green);
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
             margin-bottom: 20px;
         }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
         .stat-card {
             background-color: rgba(13, 32, 27, 0.7);
             border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            transition: transform 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            padding: 20px;
+            transition: transform 0.2s;
         }
+
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
         }
-        .stat-card::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--light-green);
-        }
+
         .stat-value {
             font-size: 2rem;
-            font-weight: bold;
-            margin: 10px 0;
+            font-weight: 700;
+            margin: 5px 0;
             color: var(--highlight);
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
         }
-        .stat-unit {
-            font-size: 1rem;
-            opacity: 0.8;
+
+        .progress-container {
+            height: 8px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow: hidden;
         }
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--light-green), var(--highlight));
+            border-radius: 4px;
+            transition: width 0.5s ease;
         }
-        .chart-placeholder {
-            background-color: rgba(13, 32, 27, 0.5);
-            height: 250px;
-            border-radius: 10px;
+
+        .timeline {
+            margin: 30px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .timeline-badge {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--light-green);
+            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 20px 0;
-            border: 2px dashed var(--light-green);
+            margin-top: 3px;
         }
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 180px;
-            background-color: var(--light-green);
-            color: var(--text-color);
-            text-align: center;
-            border-radius: 6px;
-            padding: 8px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-        .recommendation-card {
-            background: rgba(13, 32, 27, 0.7);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px 0;
-            border-left: 4px solid var(--light-green);
+
+        .streak-milestones {
             display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-        .recommendation-card:hover {
-            background: rgba(88, 129, 87, 0.3);
-        }
-        .recommendation-icon {
-            font-size: 24px;
-            margin-right: 15px;
-            color: var(--highlight);
-        }
-        .recommendation-content {
-            flex: 1;
-        }
-        .recommendation-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .action-btn {
-            background: var(--light-green);
-            border: none;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .action-btn:hover {
-            background: var(--highlight);
-            transform: scale(1.05);
-        }
-        .eco-tip {
-            background-color: rgba(88,129,87,0.2);
-            padding: 15px;
-            border-radius: 8px;
+            justify-content: space-between;
             margin: 20px 0;
-            border-left: 4px solid var(--light-green);
         }
-        .eco-tip span {
+
+        .milestone {
+            text-align: center;
+            flex: 1;
+            padding: 10px;
+            position: relative;
+        }
+
+        .milestone:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,0.2);
+            z-index: -1;
+        }
+
+        .milestone.achieved::after {
+            background: var(--light-green);
+        }
+
+        .milestone.current {
             font-weight: bold;
             color: var(--highlight);
         }
+
         @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                float: none;
-                margin-right: 0;
-                margin-bottom: 20px;
-            }
-            .stats-grid {
+            .container {
                 grid-template-columns: 1fr;
             }
-            .stats-header {
-                flex-direction: column;
-                align-items: flex-start;
+
+            .sidebar {
+                position: static;
             }
-            .time-filter {
-                margin-top: 10px;
+
+            .badges-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .streak-milestones {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .milestone {
+                flex: none;
+                width: calc(50% - 5px);
+            }
+
+            .milestone::after {
+                display: none;
             }
         }
     </style>
@@ -301,156 +322,278 @@
 <body>
     <div class="container">
         <header>
-            <h1 class="app-title">CarbonTrack</h1>
-            <p class="tagline">Monitor & Reduce Your Digital Emissions</p>
+            <h1 class="app-title">CarbonTrack Pro</h1>
+            <div class="streak-container">
+                <span class="streak-icon">🔥</span>
+                <div class="streak-info">
+                    <div class="streak-count">7</div>
+                    <div class="streak-label">Day Streak</div>
+                </div>
+            </div>
+            <div class="user-profile">
+                <span>👋 Welcome, Alex</span>
+            </div>
         </header>
-        
+
         <div class="sidebar">
             <div class="nav-item active">
-                <i class="icon">📊</i> Dashboard
+                <span>📊</span> Dashboard
             </div>
             <div class="nav-item">
-                <i class="icon">📈</i> Analytics
+                <span>📈</span> Analytics
             </div>
             <div class="nav-item">
-                <i class="icon">🌱</i> Impact
+                <span>🌿</span> Sustainability Tips
             </div>
             <div class="nav-item">
-                <i class="icon">💡</i> Recommendations
+                <span>🏆</span> Achievements
+                <span class="badge">3</span>
             </div>
             <div class="nav-item">
-                <i class="icon">⚙️</i> Settings
+                <span>⚙️</span> Settings
             </div>
-            
-            <div class="toggle-container">
-                <span>Dark Mode</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
+
+            <div class="eco-score">
+                <h3>Your Eco Score</h3>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 65%"></div>
+                </div>
+                <p>Better than 78% of users</p>
             </div>
         </div>
-        
+
         <div class="main-content">
             <div class="dashboard-section">
-                <div class="stats-header">
-                    <h2 class="section-title">
-                        <span>📊</span> Your Digital Carbon Dashboard
-                    </h2>
+                <div class="section-header">
+                    <h2>Carbon Footprint Overview</h2>
                     <div class="time-filter">
-                        <button class="time-btn" data-period="week">Week</button>
-                        <button class="time-btn active" data-period="month">Month</button>
-                        <button class="time-btn" data-period="year">Year</button>
+                        <select id="timeRange">
+                            <option value="week">This Week</option>
+                            <option value="month" selected>This Month</option>
+                            <option value="year">This Year</option>
+                        </select>
                     </div>
                 </div>
-                
+
                 <div class="stats-grid">
-                    <div class="stat-card tooltip">
-                        <div class="stat-value">32.7 <span class="stat-unit">kgCO₂e</span></div>
-                        <div class="stat-label">Total Footprint</div>
-                        <span class="tooltiptext">Emissions from all digital activities</span>
+                    <div class="stat-card">
+                        <div>Digital Carbon Footprint</div>
+                        <div class="stat-value" data-week="18.4" data-month="73.6" data-year="883.2">18.4 <small>kgCO₂e</small></div>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 45%"></div>
+                        </div>
                     </div>
-                    <div class="stat-card tooltip">
-                        <div class="stat-value">15.2 <span class="stat-unit">kgCO₂e</span></div>
-                        <div class="stat-label">Streaming</div>
-                        <span class="tooltiptext">Video streaming emissions</span>
+                    <div class="stat-card">
+                        <div>Streaming Impact</div>
+                        <div class="stat-value" data-week="9.2" data-month="36.8" data-year="441.6">9.2 <small>kgCO₂e</small></div>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 60%"></div>
+                        </div>
                     </div>
-                    <div class="stat-card tooltip">
-                        <div class="stat-value">-12%</div>
-                        <div class="stat-label">Improvement</div>
-                        <span class="tooltiptext">Reduction vs last month</span>
+                    <div class="stat-card">
+                        <div>Cloud Storage</div>
+                        <div class="stat-value" data-week="5.1" data-month="20.4" data-year="244.8">5.1 <small>kgCO₂e</small></div>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 30%"></div>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="eco-tip">
-                    <span>💡 Pro Tip:</span> Enable "Data Saver" mode to reduce emissions by 30%.
+
+                <div class="timeline">
+                    <h3>Recent Activity</h3>
+                    <div class="timeline-item">
+                        <div class="timeline-badge">🎬</div>
+                        <div>
+                            <strong>Netflix Streaming</strong>
+                            <p>2 hours HD video • 1.2 kgCO₂e</p>
+                            <small>Today, 8:45 PM</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-badge">📧</div>
+                        <div>
+                            <strong>Email Activity</strong>
+                            <p>42 sent/received • 0.4 kgCO₂e</p>
+                            <small>Today, 3:22 PM</small>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="chart-placeholder"></div>
             </div>
-            
+
             <div class="dashboard-section">
-                <h2 class="section-title">
-                    <span>📈</span> Activity Analysis
-                </h2>
-                <div class="chart-placeholder"></div>
+                <h2>Weekly Reduction Goals</h2>
+                <div class="progress-container" style="height: 20px; margin: 20px 0;">
+                    <div class="progress-bar" style="width: 72%;"></div>
+                </div>
+                <p>You're on track to reduce your footprint by 15% this week</p>
+
+                <div class="streak-milestones">
+                    <div class="milestone achieved">
+                        <span>✅ 1 Day</span>
+                    </div>
+                    <div class="milestone achieved">
+                        <span>✅ 3 Days</span>
+                    </div>
+                    <div class="milestone current">
+                        <span>🔥 7 Days</span>
+                    </div>
+                    <div class="milestone">
+                        <span>14 Days</span>
+                    </div>
+                    <div class="milestone">
+                        <span>30 Days</span>
+                    </div>
+                </div>
             </div>
-            
+
             <div class="dashboard-section">
-                <h2 class="section-title">
-                    <span>💡</span> Quick Actions
-                </h2>
-                
-                <div class="recommendation-card">
-                    <div class="recommendation-icon">🎬</div>
-                    <div class="recommendation-content">
-                        <div class="recommendation-title">Reduce Streaming Quality</div>
-                        <div>Switch from HD to SD when watching videos</div>
+                <h2>🏆 Your Eco Badges</h2>
+                <p>Earn badges by maintaining streaks and reducing your carbon footprint</p>
+
+                <div class="badges-container">
+                    <div class="badge unlocked">
+                        <div class="badge-level">1</div>
+                        <div class="badge-icon">🌱</div>
+                        <div class="badge-name">Green Starter</div>
+                        <div class="badge-progress">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
                     </div>
-                    <button class="action-btn">Apply</button>
-                </div>
-                
-                <div class="recommendation-card">
-                    <div class="recommendation-icon">📧</div>
-                    <div class="recommendation-content">
-                        <div class="recommendation-title">Clean Inbox</div>
-                        <div>Delete old emails to reduce storage impact</div>
+
+                    <div class="badge unlocked">
+                        <div class="badge-level">2</div>
+                        <div class="badge-icon">🔥</div>
+                        <div class="badge-name">3-Day Streak</div>
+                        <div class="badge-progress">
+                            <div class="progress-fill" style="width: 100%"></div>
+                        </div>
                     </div>
-                    <button class="action-btn">Start</button>
-                </div>
-                
-                <div class="recommendation-card">
-                    <div class="recommendation-icon">☁️</div>
-                    <div class="recommendation-content">
-                        <div class="recommendation-title">Optimize Cloud</div>
-                        <div>Remove duplicate files from cloud storage</div>
+
+                    <div class="badge">
+                        <div class="badge-icon">🚀</div>
+                        <div class="badge-name">7-Day Streak</div>
+                        <div class="badge-progress">
+                            <div class="progress-fill" style="width: 70%"></div>
+                        </div>
                     </div>
-                    <button class="action-btn">Review</button>
+
+                    <div class="badge">
+                        <div class="badge-icon">🏆</div>
+                        <div class="badge-name">Carbon Hero</div>
+                        <div class="badge-progress">
+                            <div class="progress-fill" style="width: 30%"></div>
+                        </div>
+                    </div>
+
+                    <div class="badge">
+                        <div class="badge-icon">💡</div>
+                        <div class="badge-name">Energy Saver</div>
+                        <div class="badge-progress">
+                            <div class="progress-fill" style="width: 15%"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        document.querySelectorAll('.action-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const originalText = btn.textContent;
-                btn.textContent = 'Applying...';
-                btn.disabled = true;
-                
-                setTimeout(() => {
-                    btn.textContent = '✓ Done';
-                    setTimeout(() => {
-                        btn.textContent = originalText;
-                        btn.disabled = false;
-                    }, 2000);
-                }, 1000);
-            });
-        });
-
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelector('.nav-item.active').classList.remove('active');
-                this.classList.add('active');
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedPeriod = localStorage.getItem('timePeriod') || 'month';
-            document.querySelector(`.time-btn[data-period="${savedPeriod}"]`).classList.add('active');
-            
-            document.querySelectorAll('.time-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    localStorage.setItem('timePeriod', this.dataset.period);
+        document.addEventListener('DOMContentLoaded', () => {
+            const navigationItems = document.querySelectorAll('.nav-item');
+            navigationItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navigationItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
                 });
             });
-        });
 
-        const modeToggle = document.querySelector('.toggle-switch input');
-        modeToggle.addEventListener('change', function() {
-            document.body.classList.toggle('light-mode', this.checked);
+            const timeRangeSelector = document.getElementById('timeRange');
+            const carbonStats = document.querySelectorAll('.stat-value');
+
+            timeRangeSelector.addEventListener('change', () => {
+                const selectedTimeRange = timeRangeSelector.value;
+                carbonStats.forEach(stat => {
+                    const weeklyValue = stat.dataset.week;
+                    const monthlyValue = stat.dataset.month;
+                    const yearlyValue = stat.dataset.year;
+                    let displayValue;
+
+                    if (selectedTimeRange === 'week') {
+                        displayValue = weeklyValue;
+                    } else if (selectedTimeRange === 'month') {
+                        displayValue = monthlyValue;
+                    } else if (selectedTimeRange === 'year') {
+                        displayValue = yearlyValue;
+                    }
+
+                    if (displayValue !== undefined) {
+                        stat.innerHTML = `${parseFloat(displayValue).toFixed(1)} <small>kgCO₂e</small>`;
+                    }
+                });
+            });
+
+            setInterval(() => {
+                const emissionChange = (Math.random() * 0.2 - 0.1).toFixed(2);
+                const mainFootprint = document.querySelector('.stat-value[data-week]');
+                if (mainFootprint) {
+                    const currentEmission = parseFloat(mainFootprint.textContent);
+                    const newEmission = Math.max(0, (currentEmission + parseFloat(emissionChange))).toFixed(1);
+                    mainFootprint.innerHTML = `${newEmission} <small>kgCO₂e</small>`;
+                    mainFootprint.dataset.week = newEmission;
+                    mainFootprint.dataset.month = (parseFloat(newEmission) * 4).toFixed(1);
+                    mainFootprint.dataset.year = (parseFloat(newEmission) * 52).toFixed(1);
+                }
+            }, 5000);
+
+            const ecoStreakCount = localStorage.getItem('ecoStreak') || 7;
+            document.querySelector('.streak-count').textContent = ecoStreakCount;
+
+            updateBadgeProgress(ecoStreakCount);
+
+            const checkInButton = document.createElement('button');
+            checkInButton.textContent = '🌿 Check In Today';
+            checkInButton.style.cssText = `
+                background: var(--light-green);
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 20px;
+                font-weight: bold;
+                cursor: pointer;
+                margin-top: 15px;
+                transition: all 0.3s;
+                width: 100%;
+            `;
+
+            checkInButton.addEventListener('click', () => {
+                const nextStreak = parseInt(ecoStreakCount) + 1;
+                localStorage.setItem('ecoStreak', nextStreak);
+                document.querySelector('.streak-count').textContent = nextStreak;
+                checkInButton.textContent = '✅ Checked In!';
+                checkInButton.style.backgroundColor = 'var(--highlight)';
+                updateBadgeProgress(nextStreak);
+
+                if (nextStreak === 3 || nextStreak === 7 || nextStreak === 14) {
+                    alert(`🎉 Congratulations! You've reached a ${nextStreak}-day streak!`);
+                }
+            });
+
+            document.querySelector('.streak-milestones').appendChild(checkInButton);
+
+            function updateBadgeProgress(currentStreak) {
+                const sevenDayCompletion = Math.min(100, (currentStreak / 7) * 100);
+                document.querySelector('.badge:nth-child(3) .progress-fill').style.width = `${sevenDayCompletion}%`;
+
+                if (currentStreak >= 3) {
+                    document.querySelector('.badge:nth-child(2)').classList.add('unlocked');
+                }
+                if (currentStreak >= 7) {
+                    document.querySelector('.badge:nth-child(3)').classList.add('unlocked');
+                }
+
+                const achievedBadges = document.querySelectorAll('.badge.unlocked').length;
+                document.querySelector('.nav-item:nth-child(4) .badge').textContent = achievedBadges;
+            }
         });
     </script>
 </body>
