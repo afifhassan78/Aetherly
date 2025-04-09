@@ -1,32 +1,43 @@
-# CarbonTrack Pro-Advanced Emissions Monitor
+# Aetherly - Digital Carbon Footprint Tracker 🌱
 
-## Overview
-
-CarbonTrack Pro is a web application designed to help users monitor and reduce their digital carbon footprint. It provides a dashboard with key metrics, tracks activity, sets reduction goals, and rewards progress with eco-badges. This project aims to raise awareness about the environmental impact of our online habits and encourage more sustainable digital practices.
-
+Aetherly is a web application designed to help users track and reduce their digital carbon footprint through actionable insights and sustainable recommendations.
 ## Features
 
-* **Carbon Footprint Overview:** Displays estimated digital carbon emissions for the current week, month, and year, broken down by categories like digital activity, streaming impact, and cloud storage.
-* **Time-Based Data:** Allows users to view their carbon footprint data for different timeframes (week, month, year) using a dropdown filter.
-* **Recent Activity Timeline:** Shows a log of recent digital activities and their estimated carbon emissions.
-* **Weekly Reduction Goals:** Tracks progress towards a weekly carbon reduction target.
-* **Streak Tracking:** Encourages consistent engagement by tracking and displaying the user's consecutive "check-in" days.
-* **Eco Badges:** Rewards users for achieving milestones and maintaining streaks with virtual badges.
-* **Eco Score:** Provides an overall eco-consciousness score and compares it with other users.
-* **User-Friendly Interface:** A clean and intuitive design for easy navigation and understanding of data.
+### Dashboard Overview
+- **Real-time carbon metrics** tracking digital activities
+- **Interactive charts** showing footprint breakdown by category
+- **Time period filters** (week/month/year) for historical data
+- **Personalized recommendations** with estimated impact
 
-## Technologies Used
+### Core Functionality
+- **Navigation System**
+  ```javascript
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(item => {
+      item.addEventListener('click', function(e) {
+          // Section switching logic
+      });
+  });
+### Technologies Used
+**Frontend**
+HTML5 - Semantic markup structure
 
-* HTML
-* CSS
-* JavaScript
+CSS3 - Modern styling with CSS variables
 
-## Setup
+JavaScript - Interactive functionality
 
-This is a client-side web application. To run it:
+SVG - Custom charts and illustrations
 
-1.  Save the provided HTML code as an `.html` file (e.g., `index.html`).
-2.  Open the `index.html` file in any modern web browser.
+**Design Principles**
+Responsive Design - Works on all device sizes
+
+## Usage
+**Basic Interactions**
+Click sidebar items to navigate between sections
+
+Use time filters to view different data periods
+
+Apply recommendations to reduce your footprint
 
 ## How to Use
 
