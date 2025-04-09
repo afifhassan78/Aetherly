@@ -3,598 +3,1197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CarbonTrack Pro - Advanced Emissions Monitor</title>
+    <title>Aetherly - Digital Carbon Footprint Tracker</title>
     <style>
         :root {
-            --dark-green: #1a2e2a;
-            --medium-green: #2d4a44;
-            --light-green: #588157;
-            --highlight: #84a98c;
-            --gold: #ffd700;
-            --text-color: #f8f9fa;
-            --warning: #ff9f1c;
+            --dark-green-primary: #1a2e2a;
+            --dark-green-secondary: #0d201b;
+            --medium-green: #2c5141;
+            --accent-green: #588157;
+            --light-green: #84a98c;
+            --highlight: #a3b18a;
+            --text-light: #f0f4f1;
+            --text-dark: #2c3e35;
+            --chart-green: #4caf50;
+            --chart-yellow: #ffc107;
+            --chart-red: #f44336;
+            --border-radius: 15px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
-
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--dark-green);
-            color: var(--text-color);
+        
+        * {
             margin: 0;
-            line-height: 1.6;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
+        body {
+            background: linear-gradient(135deg, var(--dark-green-primary), var(--dark-green-secondary));
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+        
         .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 20px;
+            display: flex;
+            min-height: 100vh;
         }
-
-        header {
-            grid-column: 1 / -1;
-            background: linear-gradient(135deg, var(--medium-green), var(--dark-green));
-            padding: 20px;
-            border-radius: 15px;
+        
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, var(--dark-green-primary), var(--medium-green));
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
-
-        .app-title {
-            font-size: 2rem;
-            background: linear-gradient(90deg, var(--highlight), var(--light-green));
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            margin-left: 10px;
+            background: linear-gradient(90deg, var(--light-green), var(--highlight));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin: 0;
         }
-
-        .streak-container {
-            background-color: rgba(255, 165, 0, 0.1);
-            border: 1px solid var(--warning);
-            color: var(--warning);
-            padding: 10px 15px;
-            border-radius: 10px;
+        
+        .inspire-text {
+            font-size: 14px;
+            opacity: 0.9;
+            max-width: 300px;
+        }
+        
+        .mode-toggle {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-weight: bold;
+            margin-right: 20px;
         }
-
-        .streak-icon {
-            font-size: 1.2rem;
+        
+        .toggle-label {
+            margin: 0 10px;
+            font-size: 14px;
         }
-
-        .streak-info {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .streak-count {
-            font-size: 1.3rem;
-            line-height: 1;
-        }
-
-        .streak-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            opacity: 0.8;
-        }
-
+        
+        /* Sidebar Navigation */
         .sidebar {
-            position: sticky;
-            top: 20px;
-            height: min-content;
+            width: 250px;
+            background-color: rgba(13, 32, 27, 0.8);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 80px;
+            height: 100vh;
+            position: fixed;
+            transition: var(--transition);
+            z-index: 90;
         }
-
+        
         .nav-item {
-            padding: 12px 15px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 10px;
+            padding: 16px 24px;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            margin: 5px 10px;
+            border-radius: var(--border-radius);
         }
-
+        
         .nav-item:hover {
-            background-color: rgba(88, 129, 87, 0.3);
+            background-color: rgba(88, 129, 87, 0.2);
+            transform: translateX(5px);
         }
-
+        
         .nav-item.active {
-            background-color: var(--light-green);
-            font-weight: 600;
+            background-color: var(--accent-green);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-
-        .badges-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .badge {
-            background-color: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 15px;
+        
+        .nav-icon {
+            margin-right: 15px;
+            font-size: 20px;
+            width: 24px;
             text-align: center;
-            transition: all 0.3s;
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            padding: 90px 24px 24px;
+            margin-left: 250px;
+            transition: var(--transition);
+        }
+        
+        .welcome-section {
+            background: linear-gradient(135deg, rgba(44, 81, 65, 0.8), rgba(13, 32, 27, 0.8));
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
         }
-
-        .badge.locked {
-            filter: grayscale(1);
-            opacity: 0.7;
-        }
-
-        .badge.unlocked {
-            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.05));
-            border: 1px solid var(--gold);
-        }
-
-        .badge-icon {
-            font-size: 2rem;
-            margin-bottom: 5px;
-        }
-
-        .badge-name {
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        .badge-progress {
-            height: 4px;
-            background-color: rgba(255,255,255,0.2);
-            border-radius: 2px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--light-green), var(--highlight));
-            width: 0%;
-        }
-
-        .badge-level {
+        
+        .welcome-section::before {
+            content: "";
             position: absolute;
-            top: 5px;
-            right: 5px;
-            background-color: var(--gold);
-            color: var(--dark-green);
-            width: 20px;
-            height: 20px;
+            top: -100px;
+            right: -100px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(var(--accent-green), transparent 70%);
+            opacity: 0.3;
+            border-radius: 50%;
+            z-index: 0;
+        }
+        
+        .welcome-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .welcome-message {
+            font-size: 16px;
+            margin-bottom: 20px;
+            max-width: 600px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .eco-tip {
+            display: flex;
+            align-items: center;
+            background-color: rgba(88, 129, 87, 0.2);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            border-left: 4px solid var(--accent-green);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tip-icon {
+            margin-right: 15px;
+            font-size: 24px;
+            color: var(--accent-green);
+        }
+        
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background-color: rgba(13, 32, 27, 0.7);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            background-color: rgba(44, 81, 65, 0.7);
+        }
+        
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .metric-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+        
+        .metric-icon {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(88, 129, 87, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.7rem;
+            font-size: 20px;
+        }
+        
+        .metric-value {
+            font-size: 28px;
             font-weight: bold;
+            margin-bottom: 10px;
         }
-
-        .dashboard-section {
-            background-color: var(--medium-green);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
+        
+        .metric-unit {
+            font-size: 14px;
+            color: var(--highlight);
+            margin-left: 5px;
         }
-
+        
+        .metric-change {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            margin-top: auto;
+        }
+        
+        .metric-change.positive {
+            color: var(--chart-green);
+        }
+        
+        .metric-change.negative {
+            color: var(--chart-red);
+        }
+        
+        /* Section styling */
+        .section {
+            background-color: rgba(13, 32, 27, 0.7);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+        
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
         }
-
-        .stat-card {
-            background-color: rgba(13, 32, 27, 0.7);
-            border-radius: 10px;
-            padding: 20px;
-            transition: transform 0.2s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-3px);
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            margin: 5px 0;
-            color: var(--highlight);
+        
+        .time-filter {
             display: flex;
-            align-items: baseline;
-            gap: 5px;
-        }
-
-        .progress-container {
-            height: 8px;
-            background-color: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            margin-top: 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
             overflow: hidden;
         }
-
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--light-green), var(--highlight));
-            border-radius: 4px;
-            transition: width 0.5s ease;
+        
+        .filter-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
         }
-
-        .timeline {
-            margin: 30px 0;
+        
+        .filter-btn.active {
+            background-color: var(--accent-green);
         }
-
-        .timeline-item {
+        
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+        
+        /* Recommendations */
+        .recommendations-list {
+            display: grid;
+            gap: 16px;
+        }
+        
+        .recommendation-item {
             display: flex;
-            margin-bottom: 15px;
-            align-items: flex-start;
-            gap: 15px;
+            align-items: center;
+            padding: 16px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
         }
-
-        .timeline-badge {
-            width: 24px;
-            height: 24px;
+        
+        .recommendation-item:hover {
+            background-color: rgba(88, 129, 87, 0.2);
+        }
+        
+        .recommendation-icon {
+            background-color: var(--accent-green);
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background-color: var(--light-green);
-            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 3px;
+            margin-right: 16px;
+            font-size: 20px;
+            flex-shrink: 0;
         }
-
-        .streak-milestones {
-            display: flex;
-            justify-content: space-between;
-            margin: 20px 0;
-        }
-
-        .milestone {
-            text-align: center;
+        
+        .recommendation-content {
             flex: 1;
-            padding: 10px;
+        }
+        
+        .recommendation-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .recommendation-desc {
+            font-size: 14px;
+            color: rgba(240, 244, 241, 0.8);
+        }
+        
+        .potential-saving {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--chart-green);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 8px;
+        }
+        
+        .action-btn {
+            background-color: var(--accent-green);
+            color: var(--text-light);
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: var(--transition);
+            margin-left: 16px;
+        }
+        
+        .action-btn:hover {
+            background-color: var(--light-green);
+            transform: scale(1.05);
+        }
+        
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 56px;
+            height: 28px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--accent-green);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(28px);
+        }
+        .badges-container {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+        
+        .badge-item {
+            flex: 0 0 120px;
+            text-align: center;
+            padding: 16px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+        
+        .badge-item.unlocked {
+            background: linear-gradient(135deg, rgba(88, 129, 87, 0.3), rgba(44, 81, 65, 0.3));
+            border: 1px solid rgba(88, 129, 87, 0.5);
+        }
+        
+        .badge-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            opacity: 0.5;
+        }
+        
+        .badge-item.unlocked .badge-icon {
+            opacity: 1;
+            color: var(--accent-green);
+        }
+        
+        .badge-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .badge-date {
+            font-size: 12px;
+            color: rgba(240, 244, 241, 0.6);
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--medium-green);
+            color: var(--text-light);
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .badge-progress {
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent-green);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--chart-red);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .nav-item-wrapper {
             position: relative;
         }
-
-        .milestone:not(:last-child)::after {
+        
+        .streak-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .streak-badge {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 193, 7, 0.2);
+            border-radius: 20px;
+            padding: 6px 12px;
+        }
+        
+        .streak-icon {
+            font-size: 16px;
+            margin-right: 6px;
+            color: var(--chart-yellow);
+        }
+        
+        .streak-count {
+            font-weight: 600;
+            color: var(--chart-yellow);
+        }
+        
+        .streak-days {
+            font-size: 12px;
+            margin-left: 4px;
+            color: rgba(240, 244, 241, 0.8);
+        }
+        
+        .active-streaks {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .streak-card {
+            background-color: rgba(13, 32, 27, 0.8);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .streak-card::after {
             content: "";
             position: absolute;
-            top: 50%;
+            top: 0;
             right: 0;
+            height: 40px;
+            width: 40px;
+            background: var(--chart-yellow);
+            transform: rotate(45deg) translate(28px, -28px);
+            z-index: 0;
+        }
+        
+        .streak-type-icon {
+            margin-bottom: 12px;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 193, 7, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .streak-name {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .streak-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .streak-flame {
+            color: var(--chart-yellow);
+            margin-right: 6px;
+            font-size: 18px;
+        }
+        
+        .streak-day-count {
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .streak-details {
+            font-size: 12px;
+            color: rgba(240, 244, 241, 0.8);
+            text-align: center;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 2px;
-            background: rgba(255,255,255,0.2);
-            z-index: -1;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
-
-        .milestone.achieved::after {
-            background: var(--light-green);
+        
+        .modal-content {
+            background: linear-gradient(135deg, var(--dark-green-primary), var(--dark-green-secondary));
+            padding: 30px;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+            position: relative;
         }
-
-        .milestone.current {
-            font-weight: bold;
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        
+        .modal-title {
+            margin-bottom: 20px;
             color: var(--highlight);
         }
-
-        @media (max-width: 768px) {
-            .container {
-                grid-template-columns: 1fr;
+        
+        .modal-message {
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .modal-btn-primary {
+            background-color: var(--accent-green);
+            color: var(--text-light);
+        }
+        
+        .modal-btn-secondary {
+            background-color: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--text-light);
+        }
+        
+        .modal-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .confirmation-tick {
+            display: none;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+        }
+        
+        .tick-path {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: draw 0.6s ease-out forwards;
+        }
+        
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0;
             }
-
-            .sidebar {
-                position: static;
+        }
+       
+        @media screen and (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
-
-            .badges-container {
-                grid-template-columns: repeat(3, 1fr);
+        }
+        
+        @media screen and (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                padding: 15px;
             }
-
-            .streak-milestones {
-                flex-wrap: wrap;
-                gap: 10px;
+            
+            .header-content {
+                margin-bottom: 10px;
+                justify-content: space-between;
+                width: 100%;
             }
-
-            .milestone {
-                flex: none;
-                width: calc(50% - 5px);
-            }
-
-            .milestone::after {
+            
+            .inspire-text {
                 display: none;
+            }
+            
+            .sidebar {
+                width: 80px;
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+                width: 250px;
+            }
+            
+            .nav-text {
+                display: none;
+            }
+            
+            .sidebar.open .nav-text {
+                display: block;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding-top: 140px;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
+   
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <svg class="logo" viewBox="0 0 24 24">
+                    <path fill="#588157" d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z" />
+                </svg>
+                <div class="logo-text">Aetherly</div>
+            </div>
+            <div class="inspire-text">Empowering you to reduce your digital carbon footprint and create a sustainable digital future.</div>
+        </div>
+        <div class="mode-toggle">
+            <span class="toggle-label">Tracking Mode</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="modeToggle">
+                <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label">Action Mode</span>
+        </div>
+    </header>
+
     <div class="container">
-        <header>
-            <h1 class="app-title">CarbonTrack Pro</h1>
-            <div class="streak-container">
-                <span class="streak-icon">🔥</span>
-                <div class="streak-info">
-                    <div class="streak-count">7</div>
-                    <div class="streak-label">Day Streak</div>
-                </div>
+       
+        <div class="sidebar" id="sidebar">
+            <div class="nav-item-wrapper">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
             </div>
-            <div class="user-profile">
-                <span>👋 Welcome, Alex</span>
+            <div class="nav-item-wrapper">
+                <a href="#" class="nav-item" data-section="activities">
+                    <span class="nav-icon">💻</span>
+                    <span class="nav-text">Digital Activities</span>
+                </a>
             </div>
-        </header>
-
-        <div class="sidebar">
-            <div class="nav-item active">
-                <span>📊</span> Dashboard
+            <div class="nav-item-wrapper">
+                <a href="#" class="nav-item" data-section="streaks">
+                    <span class="nav-icon">🔥</span>
+                    <span class="nav-text">Streaks</span>
+                    <span class="notification-badge">2</span>
+                </a>
             </div>
-            <div class="nav-item">
-                <span>📈</span> Analytics
+            <div class="nav-item-wrapper">
+                <a href="#" class="nav-item" data-section="recommendations">
+                    <span class="nav-icon">💡</span>
+                    <span class="nav-text">Recommendations</span>
+                    <span class="notification-badge">3</span>
+                </a>
             </div>
-            <div class="nav-item">
-                <span>🌿</span> Sustainability Tips
+            <div class="nav-item-wrapper">
+                <a href="#" class="nav-item" data-section="achievements">
+                    <span class="nav-icon">🏆</span>
+                    <span class="nav-text">Achievements</span>
+                </a>
             </div>
-            <div class="nav-item">
-                <span>🏆</span> Achievements
-                <span class="badge">3</span>
+            <div class="nav-item-wrapper">
+                <a href="#" class="nav-item" data-section="reports">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Reports</span>
+                </a>
             </div>
-            <div class="nav-item">
-                <span>⚙️</span> Settings
+            <div class="nav-item-wrapper">
+                <a href="#" class="nav-item" data-section="settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">Settings</span>
+                </a>
             </div>
-
-            <div class="eco-score">
-                <h3>Your Eco Score</h3>
-                <div class="progress-container">
-                    <div class="progress-bar" style="width: 65%"></div>
-                </div>
-                <p>Better than 78% of users</p>
+            <div class="nav-item-wrapper">
+                <a href="#" class="nav-item" data-section="help">
+                    <span class="nav-icon">❓</span>
+                    <span class="nav-text">Help</span>
+                </a>
             </div>
         </div>
 
+
         <div class="main-content">
-            <div class="dashboard-section">
-                <div class="section-header">
-                    <h2>Carbon Footprint Overview</h2>
-                    <div class="time-filter">
-                        <select id="timeRange">
-                            <option value="week">This Week</option>
-                            <option value="month" selected>This Month</option>
-                            <option value="year">This Year</option>
-                        </select>
+            
+            <div id="dashboard-section">
+                <div class="welcome-section">
+                    <h1 class="welcome-title">Welcome to Aetherly, Alex!</h1>
+                    <p class="welcome-message">Let's track your digital carbon footprint together. We've analyzed your recent digital activities and found opportunities to reduce your carbon emissions by up to 35%.</p>
+                    
+                    <div class="streak-container">
+                        <div class="streak-badge">
+                            <span class="streak-icon">🔥</span>
+                            <span class="streak-count">14</span>
+                            <span class="streak-days">day streak</span>
+                        </div>
+                    </div>
+                    
+                    <div class="eco-tip">
+                        <div class="tip-icon">💡</div>
+                        <div class="tip-content">
+                            <strong>Eco Tip:</strong> Streaming videos in standard quality instead of HD can reduce your carbon emissions by up to 86% per hour.
+                        </div>
                     </div>
                 </div>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div>Digital Carbon Footprint</div>
-                        <div class="stat-value" data-week="18.4" data-month="73.6" data-year="883.2">18.4 <small>kgCO₂e</small></div>
-                        <div class="progress-container">
+                <div class="dashboard-grid">
+                    <div class="metric-card tooltip">
+                        <div class="metric-header">
+                            <div class="metric-title">Digital Carbon Footprint</div>
+                            <div class="metric-icon">🌱</div>
+                        </div>
+                        <div class="metric-value">32.7<span class="metric-unit">kg CO₂e</span></div>
+                        <div class="metric-change negative">
+                            <span>↓ 12% from last month</span>
+                        </div>
+                        <span class="tooltiptext">Your total digital carbon emissions from all activities including streaming, email, and cloud storage</span>
+                    </div>
+
+                    <div class="metric-card tooltip">
+                        <div class="metric-header">
+                            <div class="metric-title">Email Carbon</div>
+                            <div class="metric-icon">📧</div>
+                        </div>
+                        <div class="metric-value">8.3<span class="metric-unit">kg CO₂e</span></div>
+                        <div class="metric-change negative">
+                            <span>↓ 5% from last month</span>
+                        </div>
+                        <span class="tooltiptext">Emissions from sending/receiving emails and attachments. Try reducing large attachments!</span>
+                    </div>
+
+                    <div class="metric-card tooltip">
+                        <div class="metric-header">
+                            <div class="metric-title">Streaming Carbon</div>
+                            <div class="metric-icon">🎬</div>
+                        </div>
+                        <div class="metric-value">15.2<span class="metric-unit">kg CO₂e</span></div>
+                        <div class="metric-change positive">
+                            <span>↑ 3% from last month</span>
+                        </div>
+                        <span class="tooltiptext">Video streaming emissions. Watch in lower resolution to reduce this.</span>
+                    </div>
+
+                    <div class="metric-card tooltip">
+                        <div class="metric-header">
+                            <div class="metric-title">Cloud Storage Carbon</div>
+                            <div class="metric-icon">☁️</div>
+                        </div>
+                        <div class="metric-value">9.2<span class="metric-unit">kg CO₂e</span></div>
+                        <div class="metric-change negative">
+                            <span>↓ 8% from last month</span>
+                        </div>
+                        <span class="tooltiptext">Emissions from cloud storage. Clean up unused files to reduce this.</span>
+                    </div>
+
+                    <div class="metric-card tooltip">
+                        <div class="metric-header">
+                            <div class="metric-title">Sustainable Choices</div>
+                            <div class="metric-icon">✅</div>
+                        </div>
+                        <div class="metric-value">14<span class="metric-unit">actions</span></div>
+                        <div class="metric-change positive">
+                            <span>↑ 6 from last month</span>
+                        </div>
+                        <span class="tooltiptext">Eco-friendly actions you've taken this month. Keep it up!</span>
+                    </div>
+
+                    <div class="metric-card tooltip">
+                        <div class="metric-header">
+                            <div class="metric-title">Carbon Saved</div>
+                            <div class="metric-icon">🌍</div>
+                        </div>
+                        <div class="metric-value">4.5<span class="metric-unit">kg CO₂e</span></div>
+                        <div class="metric-change positive">
+                            <span>↑ 22% from last month</span>
+                        </div>
+                        <span class="tooltiptext">Estimated carbon savings from your sustainable choices. Great job!</span>
+                    </div>
+                </div>
+
+                <div class="section footprint-breakdown">
+                    <div class="section-header">
+                        <h2 class="section-title">Digital Carbon Breakdown</h2>
+                        <div class="time-filter">
+                            <button class="filter-btn" data-period="week">Week</button>
+                            <button class="filter-btn active" data-period="month">Month</button>
+                            <button class="filter-btn" data-period="year">Year</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <svg width="100%" height="100%" viewBox="0 0 800 300" id="carbonChart">
+                        <g class="grid-lines">
+                            <line x1="50" y1="250" x2="750" y2="250" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                            <line x1="50" y1="200" x2="750" y2="200" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                            <line x1="50" y1="150" x2="750" y2="150" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                            <line x1="50" y1="100" x2="750" y2="100" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                            <line x1="50" y1="50" x2="750" y2="50" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                        </g>
+                        
+                        <line x1="50" y1="50" x2="50" y2="250" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+                        <text x="20" y="50" fill="#f0f4f1" font-size="12">40kg</text>
+                        <text x="20" y="100" fill="#f0f4f1" font-size="12">30kg</text>
+                        <text x="20" y="150" fill="#f0f4f1" font-size="12">20kg</text>
+                        <text x="20" y="200" fill="#f0f4f1" font-size="12">10kg</text>
+                        <text x="20" y="250" fill="#f0f4f1" font-size="12">0kg</text>
+                        
+                        
+                        <line x1="50" y1="250" x2="750" y2="250" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+                        
+                        <g class="category streaming">
+                            <rect x="125" y="100" width="100" height="150" fill="#4caf50" rx="5" ry="5"/>
+                            <text x="175" y="270" fill="#f0f4f1" font-size="12" text-anchor="middle">Streaming</text>
+                            <text x="175" y="90" fill="#f0f4f1" font-size="12" text-anchor="middle">15.2kg</text>
+                        </g>
+                        <g class="category email">
+                            <rect x="275" y="170" width="100" height="80" fill="#588157" rx="5" ry="5"/>
+                            <text x="325" y="270" fill="#f0f4f1" font-size="12" text-anchor="middle">Email</text>
+                            <text x="325" y="160" fill="#f0f4f1" font-size="12" text-anchor="middle">8.3kg</text>
+                        </g>
+                        <g class="category cloud">
+                            <rect x="425" y="160" width="100" height="90" fill="#84a98c" rx="5" ry="5"/>
+                            <text x="475" y="270" fill="#f0f4f1" font-size="12" text-anchor="middle">Cloud</text>
+                            <text x="475" y="150" fill="#f0f4f1" font-size="12" text-anchor="middle">9.2kg</text>
+                        </g>
+                        <g class="category other">
+                            <rect x="575" y="230" width="100" height="20" fill="#a3b18a" rx="5" ry="5"/>
+                            <text x="625" y="270" fill="#f0f4f1" font-size="12" text-anchor="middle">Other</text>
+                            <text x="625" y="220" fill="#f0f4f1" font-size="12" text-anchor="middle">2.0kg</text>
+                        </g>
+                        
+                        <rect x="125" y="90" width="100" height="160" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-dasharray="5,5" rx="5" ry="5"/>
+                        <rect x="275" y="160" width="100" height="90" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-dasharray="5,5" rx="5" ry="5"/>
+                        <rect x="425" y="150" width="100" height="100" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-dasharray="5,5" rx="5" ry="5"/>
+                        <rect x="575" y="220" width="100" height="30" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-dasharray="5,5" rx="5" ry="5"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="milestone-section">
+                <div class="section-header">
+                    <h2 class="section-title">Environmental Milestones</h2>
+                </div>
+                <div class="badges-container">
+                    <div class="badge-item unlocked">
+                        <div class="badge-icon">📧</div>
+                        <div class="badge-name">Eco-Friendly Emailer</div>
+                        <div class="badge-date">Earned Apr 2, 2025</div>
+                    </div>
+                    
+                    <div class="badge-item unlocked">
+                        <div class="badge-icon">🌱</div>
+                        <div class="badge-name">Carbon Reducer</div>
+                        <div class="badge-date">Earned Mar 15, 2025</div>
+                    </div>
+                    
+                    <div class="badge-item">
+                        <div class="badge-icon">🎬</div>
+                        <div class="badge-name">Sustainable Streamer</div>
+                        <div class="badge-date">70% complete</div>
+                        <div class="badge-progress">
+                            <div class="progress-bar" style="width: 70%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="badge-item">
+                        <div class="badge-icon">☁️</div>
+                        <div class="badge-name">Cloud Optimizer</div>
+                        <div class="badge-date">45% complete</div>
+                        <div class="badge-progress">
                             <div class="progress-bar" style="width: 45%"></div>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div>Streaming Impact</div>
-                        <div class="stat-value" data-week="9.2" data-month="36.8" data-year="441.6">9.2 <small>kgCO₂e</small></div>
-                        <div class="progress-container">
-                            <div class="progress-bar" style="width: 60%"></div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div>Cloud Storage</div>
-                        <div class="stat-value" data-week="5.1" data-month="20.4" data-year="244.8">5.1 <small>kgCO₂e</small></div>
-                        <div class="progress-container">
-                            <div class="progress-bar" style="width: 30%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="timeline">
-                    <h3>Recent Activity</h3>
-                    <div class="timeline-item">
-                        <div class="timeline-badge">🎬</div>
-                        <div>
-                            <strong>Netflix Streaming</strong>
-                            <p>2 hours HD video • 1.2 kgCO₂e</p>
-                            <small>Today, 8:45 PM</small>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-badge">📧</div>
-                        <div>
-                            <strong>Email Activity</strong>
-                            <p>42 sent/received • 0.4 kgCO₂e</p>
-                            <small>Today, 3:22 PM</small>
+                    
+                    <div class="badge-item">
+                        <div class="badge-icon">🌍</div>
+                        <div class="badge-name">Digital Environmentalist</div>
+                        <div class="badge-date">25% complete</div>
+                        <div class="badge-progress">
+                            <div class="progress-bar" style="width: 25%"></div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="dashboard-section">
-                <h2>Weekly Reduction Goals</h2>
-                <div class="progress-container" style="height: 20px; margin: 20px 0;">
-                    <div class="progress-bar" style="width: 72%;"></div>
+          
+            <div class="recommendations-section">
+                <div class="section-header">
+                    <h2 class="section-title">Machine Learning Recommendations</h2>
                 </div>
-                <p>You're on track to reduce your footprint by 15% this week</p>
-
-                <div class="streak-milestones">
-                    <div class="milestone achieved">
-                        <span>✅ 1 Day</span>
+                <div class="recommendations-list">
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">🎬</div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">Reduce Video Streaming Quality</div>
+                            <div class="recommendation-desc">Switch from HD to SD quality when watching videos could save up to 86% in emissions.</div>
+                            <div class="potential-saving">Potential saving: ~10kg CO₂e/month</div>
+                        </div>
+                        <button class="action-btn" data-recommendation="streaming-quality">Apply</button>
                     </div>
-                    <div class="milestone achieved">
-                        <span>✅ 3 Days</span>
+                    
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">📧</div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">Clean Up Cloud Storage</div>
+                            <div class="recommendation-desc">Delete old files and duplicates from your cloud storage to reduce energy consumption.</div>
+                            <div class="potential-saving">Potential saving: ~3kg CO₂e/month</div>
+                        </div>
+                        <button class="action-btn" data-recommendation="cloud-cleanup">Clean Now</button>
                     </div>
-                    <div class="milestone current">
-                        <span>🔥 7 Days</span>
-                    </div>
-                    <div class="milestone">
-                        <span>14 Days</span>
-                    </div>
-                    <div class="milestone">
-                        <span>30 Days</span>
+                    
+                    <div class="recommendation-item">
+                        <div class="recommendation-icon">🔍</div>
+                        <div class="recommendation-content">
+                            <div class="recommendation-title">Use Eco-Search Engines</div>
+                            <div class="recommendation-desc">Switch to search engines that plant trees or offset carbon with each search.</div>
+                            <div class="potential-saving">Potential saving: ~1.5kg CO₂e/month</div>
+                        </div>
+                        <button class="action-btn" data-recommendation="eco-search">Learn More</button>
                     </div>
                 </div>
             </div>
 
-            <div class="dashboard-section">
-                <h2>🏆 Your Eco Badges</h2>
-                <p>Earn badges by maintaining streaks and reducing your carbon footprint</p>
-
-                <div class="badges-container">
-                    <div class="badge unlocked">
-                        <div class="badge-level">1</div>
-                        <div class="badge-icon">🌱</div>
-                        <div class="badge-name">Green Starter</div>
-                        <div class="badge-progress">
-                            <div class="progress-fill" style="width: 100%"></div>
-                        </div>
-                    </div>
-
-                    <div class="badge unlocked">
-                        <div class="badge-level">2</div>
-                        <div class="badge-icon">🔥</div>
-                        <div class="badge-name">3-Day Streak</div>
-                        <div class="badge-progress">
-                            <div class="progress-fill" style="width: 100%"></div>
-                        </div>
-                    </div>
-
-                    <div class="badge">
-                        <div class="badge-icon">🚀</div>
-                        <div class="badge-name">7-Day Streak</div>
-                        <div class="badge-progress">
-                            <div class="progress-fill" style="width: 70%"></div>
-                        </div>
-                    </div>
-
-                    <div class="badge">
-                        <div class="badge-icon">🏆</div>
-                        <div class="badge-name">Carbon Hero</div>
-                        <div class="badge-progress">
-                            <div class="progress-fill" style="width: 30%"></div>
-                        </div>
-                    </div>
-
-                    <div class="badge">
-                        <div class="badge-icon">💡</div>
-                        <div class="badge-name">Energy Saver</div>
-                        <div class="badge-progress">
-                            <div class="progress-fill" style="width: 15%"></div>
-                        </div>
-                    </div>
+            <div id="activities-section" class="hidden">
+                <div class="welcome-section">
+                    <h1 class="welcome-title">Your Digital Activities</h1>
+                    <p class="welcome-message">Detailed breakdown of your digital activities and their carbon impact.</p>
                 </div>
+                
+            </div>
+
+            <div id="recommendations-section" class="hidden">
+                <div class="welcome-section">
+                    <h1 class="welcome-title">Personalized Recommendations</h1>
+                    <p class="welcome-message">Actionable suggestions to reduce your digital carbon footprint.</p>
+                </div>
+                
+            </div>
+
+            <div id="achievements-section" class="hidden">
+                <div class="welcome-section">
+                    <h1 class="welcome-title">Your Achievements</h1>
+                    <p class="welcome-message">Celebrate your progress in reducing your digital carbon footprint.</p>
+                </div>
+                
+            </div>
+
+            <div id="reports-section" class="hidden">
+                <div class="welcome-section">
+                    <h1 class="welcome-title">Detailed Reports</h1>
+                    <p class="welcome-message">Comprehensive reports of your carbon footprint over time.</p>
+                </div>
+                
+            </div>
+
+            <div id="settings-section" class="hidden">
+                <div class="welcome-section">
+                    <h1 class="welcome-title">Settings</h1>
+                    <p class="welcome-message">Customize your Aetherly experience and tracking preferences.</p>
+                </div>
+                
+            </div>
+
+            <div id="help-section" class="hidden">
+                <div class="welcome-section">
+                    <h1 class="welcome-title">Help & Support</h1>
+                    <p class="welcome-message">Get help with using Aetherly and learn more about digital carbon footprints.</p>
+                </div>
+               
             </div>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const navigationItems = document.querySelectorAll('.nav-item');
-            navigationItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    navigationItems.forEach(i => i.classList.remove('active'));
-                    item.classList.add('active');
-                });
-            });
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <svg class="confirmation-tick" viewBox="0 0 24 24" id="tickIcon">
+                <path class="tick-path" fill="none" stroke="#4caf50" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <h2 class="modal-title" id="modalTitle">Action Confirmed</h2>
+            <p class="modal-message" id="modalMessage">Your sustainable action has been applied successfully. This will help reduce your digital carbon footprint.</p>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-primary" id="modalCloseBtn">Great!</button>
+            </div>
+        </div>
+    </div>
 
-            const timeRangeSelector = document.getElementById('timeRange');
-            const carbonStats = document.querySelectorAll('.stat-value');
-
-            timeRangeSelector.addEventListener('change', () => {
-                const selectedTimeRange = timeRangeSelector.value;
-                carbonStats.forEach(stat => {
-                    const weeklyValue = stat.dataset.week;
-                    const monthlyValue = stat.dataset.month;
-                    const yearlyValue = stat.dataset.year;
-                    let displayValue;
-
-                    if (selectedTimeRange === 'week') {
-                        displayValue = weeklyValue;
-                    } else if (selectedTimeRange === 'month') {
-                        displayValue = monthlyValue;
-                    } else if (selectedTimeRange === 'year') {
-                        displayValue = yearlyValue;
-                    }
-
-                    if (displayValue !== undefined) {
-                        stat.innerHTML = `${parseFloat(displayValue).toFixed(1)} <small>kgCO₂e</small>`;
-                    }
-                });
-            });
-
-            setInterval(() => {
-                const emissionChange = (Math.random() * 0.2 - 0.1).toFixed(2);
-                const mainFootprint = document.querySelector('.stat-value[data-week]');
-                if (mainFootprint) {
-                    const currentEmission = parseFloat(mainFootprint.textContent);
-                    const newEmission = Math.max(0, (currentEmission + parseFloat(emissionChange))).toFixed(1);
-                    mainFootprint.innerHTML = `${newEmission} <small>kgCO₂e</small>`;
-                    mainFootprint.dataset.week = newEmission;
-                    mainFootprint.dataset.month = (parseFloat(newEmission) * 4).toFixed(1);
-                    mainFootprint.dataset.year = (parseFloat(newEmission) * 52).toFixed(1);
-                }
-            }, 5000);
-
-            const ecoStreakCount = localStorage.getItem('ecoStreak') || 7;
-            document.querySelector('.streak-count').textContent = ecoStreakCount;
-
-            updateBadgeProgress(ecoStreakCount);
-
-            const checkInButton = document.createElement('button');
-            checkInButton.textContent = '🌿 Check In Today';
-            checkInButton.style.cssText = `
-                background: var(--light-green);
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 20px;
-                font-weight: bold;
-                cursor: pointer;
-                margin-top: 15px;
-                transition: all 0.3s;
-                width: 100%;
-            `;
-
-            checkInButton.addEventListener('click', () => {
-                const nextStreak = parseInt(ecoStreakCount) + 1;
-                localStorage.setItem('ecoStreak', nextStreak);
-                document.querySelector('.streak-count').textContent = nextStreak;
-                checkInButton.textContent = '✅ Checked In!';
-                checkInButton.style.backgroundColor = 'var(--highlight)';
-                updateBadgeProgress(nextStreak);
-
-                if (nextStreak === 3 || nextStreak === 7 || nextStreak === 14) {
-                    alert(`🎉 Congratulations! You've reached a ${nextStreak}-day streak!`);
-                }
-            });
-
-            document.querySelector('.streak-milestones').appendChild(checkInButton);
-
-            function updateBadgeProgress(currentStreak) {
-                const sevenDayCompletion = Math.min(100, (currentStreak / 7) * 100);
-                document.querySelector('.badge:nth-child(3) .progress-fill').style.width = `${sevenDayCompletion}%`;
-
-                if (currentStreak >= 3) {
-                    document.querySelector('.badge:nth-child(2)').classList.add('unlocked');
-                }
-                if (currentStreak >= 7) {
-                    document.querySelector('.badge:nth-child(3)').classList.add('unlocked');
-                }
-
-                const achievedBadges = document.querySelectorAll('.badge.unlocked').length;
-                document.querySelector('.nav-item:nth-child(4) .badge').textContent = achievedBadges;
-            }
-        });
-    </script>
+    <div class="modal" id="learnMoreModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">About Eco-Search Engines</h2>
+            <p class="modal-message">
+                Eco-search engines like Ecosia, OceanHero, and Ekoru use their ad revenue to fund environmental projects. 
+                Ecosia plants trees, OceanHero removes ocean plastic, and Ekoru supports marine conservation. 
+                By switching your default search engine, you can make a positive impact with every search.
+            </p>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-secondary" id="learnMoreCloseBtn">Close</button>
+                <button class="modal-btn modal-btn-primary" id="switchSearchBtn">Switch Now</button>
+            </div>
+        </div>
+    </div>
+ <script src="script.js"></script>
 </body>
 </html>
