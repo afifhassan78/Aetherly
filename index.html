@@ -1120,7 +1120,98 @@
                     <h1 class="welcome-title">Your Digital Activities</h1>
                     <p class="welcome-message">Detailed breakdown of your digital activities and their carbon impact.</p>
                 </div>
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Activity Breakdown</h2>
+                        <div class="time-filter">
+                            <button class="filter-btn active" data-period="week">Week</button>
+                            <button class="filter-btn" data-period="month">Month</button>
+                            <button class="filter-btn" data-period="year">Year</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <svg width="100%" height="100%" viewBox="0 0 800 300" id="activityChart">
+                            <g class="grid-lines">
+                                <line x1="50" y1="250" x2="750" y2="250" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                                <line x1="50" y1="200" x2="750" y2="200" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                                <line x1="50" y1="150" x2="750" y2="150" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                                <line x1="50" y1="100" x2="750" y2="100" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                                <line x1="50" y1="50" x2="750" y2="50" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                            </g>
+                            
+                            <line x1="50" y1="50" x2="50" y2="250" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+                            <text x="20" y="50" fill="#f0f4f1" font-size="12">5h</text>
+                            <text x="20" y="100" fill="#f0f4f1" font-size="12">4h</text>
+                            <text x="20" y="150" fill="#f0f4f1" font-size="12">3h</text>
+                            <text x="20" y="200" fill="#f0f4f1" font-size="12">2h</text>
+                            <text x="20" y="250" fill="#f0f4f1" font-size="12">1h</text>
+                            
+                            <line x1="50" y1="250" x2="750" y2="250" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+                            
+                            <g class="activity video">
+                                <rect x="100" y="70" width="80" height="180" fill="#4caf50" rx="5" ry="5"/>
+                                <text x="140" y="270" fill="#f0f4f1" font-size="12" text-anchor="middle">Netflix</text>
+                                <text x="140" y="60" fill="#f0f4f1" font-size="12" text-anchor="middle">4.5h</text>
+                            </g>
+                            <g class="activity social">
+                                <rect x="200" y="150" width="80" height="100" fill="#588157" rx="5" ry="5"/>
+                                <text x="240" y="270" fill="#f0f4f1" font-size="12" text-anchor="middle">Social</text>
+                                <text x="240" y="140" fill="#f0f4f1" font-size="12" text-anchor="middle">2.5h</text>
+                            </g>
+                            <g class="activity email">
+                                <rect x="300" y="200" width="80" height="50" fill="#84a98c" rx="5" ry="5"/>
+                                <text x="340" y="270" fill="#f0f4f1" font-size="12" text-anchor="middle">Email</text>
+                                <text x="340" y="190" fill="#f0f4f1" font-size="12" text-anchor="middle">1.2h</text>
+                            </g>
+                            <g class="activity meetings">
+                                <rect x="400" y="180" width="80" height="70" fill="#a3b18a" rx="5" ry="5"/>
+                                <text x="440" y="270" fill="#f0f4f1" font-size="12" text-anchor="middle">Meetings</text>
+                                <text x="440" y="170" fill="#f0f4f1" font-size="12" text-anchor="middle">1.8h</text>
+                            </g>
+                            <g class="activity gaming">
+                                <rect x="500" y="130" width="80" height="120" fill="#588157" rx="5" ry="5"/>
+                                <text x="540" y="270" fill="#f0f4f1" font-size="12" text-anchor="middle">Gaming</text>
+                                <text x="540" y="120" fill="#f0f4f1" font-size="12" text-anchor="middle">3.0h</text>
+                            </g>
+                            <g class="activity browsing">
+                                <rect x="600" y="170" width="80" height="80" fill="#84a98c" rx="5" ry="5"/>
+                                <text x="640" y="270" fill="#f0f4f1" font-size="12" text-anchor="middle">Browsing</text>
+                                <text x="640" y="160" fill="#f0f4f1" font-size="12" text-anchor="middle">2.0h</text>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
                 
+                <div class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Activity Carbon Impact</h2>
+                    </div>
+                    <div class="recommendations-list">
+                        <div class="recommendation-item">
+                            <div class="recommendation-icon">🎬</div>
+                            <div class="recommendation-content">
+                                <div class="recommendation-title">Video Streaming (4.5h)</div>
+                                <div class="recommendation-desc">Highest carbon activity at 9.3kg CO₂e. Reducing quality or time could significantly lower your impact.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="recommendation-item">
+                            <div class="recommendation-icon">🎮</div>
+                            <div class="recommendation-content">
+                                <div class="recommendation-title">Gaming (3.0h)</div>
+                                <div class="recommendation-desc">Generated 5.8kg CO₂e. Consider playing downloaded games instead of streaming to reduce carbon impact.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="recommendation-item">
+                            <div class="recommendation-icon">📱</div>
+                            <div class="recommendation-content">
+                                <div class="recommendation-title">Social Media (2.5h)</div>
+                                <div class="recommendation-desc">Generated 3.2kg CO₂e. Try to batch your social media use rather than checking throughout the day.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div id="recommendations-section" class="hidden">
